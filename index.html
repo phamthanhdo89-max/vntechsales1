@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN TechSales - Sales Engineer Outsourcing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .language-toggle {
+            position: relative;
+            display: inline-flex;
+            background: #f0f4f8;
+            border-radius: 20px;
+            padding: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle.active {
+            background: #00cc00;
+        }
+
+        .toggle-btn {
+            padding: 6px 14px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .language-toggle.active .toggle-btn.active {
+            background: white;
+            color: #00cc33;
+        }
+
+        .language-toggle.active .toggle-btn:not(.active) {
+            color: white;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(0, 24, 204, 0.8) 0%, rgba(235, 239, 236, 0.2) 100%), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 102, 204, 0.15);
+        }
+
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgb(255, 255, 255), url('background.jpg');
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-fade {
+            opacity: 0;
+        }
+
+        .section-fade.visible {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .form-input {
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .success-message {
+            animation: slideInDown 0.5s ease-out forwards;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .service-icon {
+            background: linear-gradient(135deg, #e6f2ff 0%, #cce5ff 100%);
+            color: #0066cc;
+        }
+
+        .benefit-icon {
+            background: linear-gradient(135deg, #0066cc 0%, #004a99 100%);
+            color: white;
+        }
+
+        nav a {
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #0066cc;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #0066cc 0%, #004a99 100%);
+            transition: all 0.3s ease;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 102, 204, 0.3);
+        }
+    </style>
+</head>
+
+<body class="font-sans text-gray-800 bg-white">
+
+    <!-- Header -->
+    <header class="sticky-header">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">GB</span>
+                </div>
+                <span class="text-xl font-bold text-gray-900" data-i18n="logo">VN TechSales</span>
+            </div>
+
+            <!-- Navigation (Desktop) – Đã bỏ Home và Why Us -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-gray-700 font-medium" data-i18n="nav_about">About</a>
+                <a href="#services" class="text-gray-700 font-medium" data-i18n="nav_services">Services</a>
+                <a href="#contact" class="text-gray-700 font-medium" data-i18n="nav_contact">Contact</a>
+            </nav>
+
+            <!-- Right Section -->
+            <div class="flex items-center space-x-4">
+                <!-- Language Toggle -->
+                <div class="language-toggle" id="languageToggle">
+                    <button class="toggle-btn active" data-lang="en">EN</button>
+                    <button class="toggle-btn" data-lang="zh">中文</button>
+                </div>
+
+                <!-- CTA Button -->
+                <button onclick="document.getElementById('contact').scrollIntoView()"
+                    class="hidden md:block cta-primary text-white px-5 py-2 rounded-lg font-medium text-sm"
+                    data-i18n="cta_consultation">Get a Free Consultation</button>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-700" id="mobileMenuBtn">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation – Đã bỏ Home và Why Us -->
+        <div class="hidden md:hidden bg-white border-t border-gray-200 px-4 py-4" id="mobileMenu">
+            <nav class="flex flex-col space-y-3">
+                <a href="#about" class="text-gray-700 font-medium" data-i18n="nav_about">About</a>
+                <a href="#services" class="text-gray-700 font-medium" data-i18n="nav_services">Services</a>
+                <a href="#contact" class="text-gray-700 font-medium" data-i18n="nav_contact">Contact</a>
+                <button onclick="document.getElementById('contact').scrollIntoView()"
+                    class="cta-primary text-white px-5 py-2 rounded-lg font-medium text-sm w-full"
+                    data-i18n="cta_consultation">Get a Free Consultation</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient text-white pt-20 pb-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="section-fade fade-in">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight" data-i18n="hero_headline">Scale Your B2B
+                    Sales with Expert Sales Engineers</h1>
+                <p class="text-lg text-blue-100 mb-8 leading-relaxed" data-i18n="hero_subheadline">We provide
+                    pre-vetted, multilingual sales engineers to drive technical sales and close complex deals across
+                    global markets.</p>
+                <button onclick="document.getElementById('contact').scrollIntoView()"
+                    class="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold text-lg hover:bg-blue-50 transition"
+                    data-i18n="cta_consultation">Get a Free Consultation</button>
+            </div> <!-- phải sửa lại đoạn này hoặc xóa ô chữ nhật đi -->
+            <div class="section-fade fade-in" style="animation-delay: 0.2s;">
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-6">
+            
+            <!-- Tiêu đề vẫn giữ căn giữa và giới hạn chiều rộng -->
+            <div class="text-center mb-16 section-fade">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4" data-i18n="services_title">Our Services</h2>
+                <p class="text-lg text-gray-600" data-i18n="services_subtitle">Comprehensive solutions to accelerate your sales</p>
+            </div>
+    
+        </div>
+    
+        <!-- Grid full width trên màn hình lớn -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 px-4 sm:px-6 lg:px-8 xl:px-10">
+            
+            <!-- Service Card 1 -->
+            <div class="bg-white rounded-2xl p-8 card-hover section-fade">
+                <div class="icon-box service-icon mb-6">
+                    <i class="fas fa-magnifying-glass-chart"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3" data-i18n="service1_title">Technical Sales Support</h3>
+                <p class="text-gray-600" data-i18n="service1_desc">Expert sales engineers who understand your product deeply and can engage technical buyers effectively.</p>
+            </div>
+    
+            <!-- Service Card 2 -->
+            <div class="bg-white rounded-2xl p-8 card-hover section-fade" style="animation-delay: 0.1s;">
+                <div class="icon-box service-icon mb-6">
+                    <i class="fas fa-users-gear"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3" data-i18n="service2_title">Outsourced Technical Sales Representation</h3>
+                <p class="text-gray-600" data-i18n="service2_desc">Professional demonstration and proof-of-concept delivery to showcase value and accelerate deal progression.</p>
+            </div>
+    
+            <!-- Service Card 3 -->
+            <div class="bg-white rounded-2xl p-8 card-hover section-fade" style="animation-delay: 0.2s;">
+                <div class="icon-box service-icon mb-6">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3" data-i18n="service3_title">Authorized After-Sales & Field Services</h3>
+                <p class="text-gray-600" data-i18n="service3_desc">Navigate new markets with local expertise, cultural insight, and technical credibility in international regions.</p>
+            </div>
+    
+            <!-- Service Card 4 -->
+            <div class="bg-white rounded-2xl p-8 card-hover section-fade" style="animation-delay: 0.3s;">
+                <div class="icon-box service-icon mb-6">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3" data-i18n="service4_title">Ongoing Account Management</h3>
+                <p class="text-gray-600" data-i18n="service4_desc">Long-term partnership support to ensure customer success, expand adoption, and drive retention.</p>
+            </div>
+    
+            <!-- Service Card 5 -->
+            <div class="bg-white rounded-2xl p-8 card-hover section-fade" style="animation-delay: 0.4s;">
+                <div class="icon-box service-icon mb-6">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3" data-i18n="service5_title">Ongoing Account Management</h3>
+                <p class="text-gray-600" data-i18n="service5_desc">Long-term partnership support to ensure customer success, expand adoption, and drive retention.</p>
+            </div>
+    
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="section-fade">
+                <div class="relative rounded-xl h-96 overflow-hidden">
+
+                    <!-- Hình nền -->
+                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('battaydoitac.jpg');">
+                    </div>
+
+                    <!-- Lớp overlay tối -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/50"></div>
+                </div>
+            </div>
+
+            <div class="section-fade" style="animation-delay: 0.2s;">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6" data-i18n="about_title">About VN TechSales</h2>
+                <p class="text-lg text-gray-700 mb-6 leading-relaxed" data-i18n="about_desc1">VN TechSales is dedicated to providing effective technical sales solutions that help businesses successfully expand and grow sustainably in Vietnam.</p>
+                <p class="text-lg text-gray-700 mb-6 leading-relaxed" data-i18n="about_desc2">We understand that in the industrial and technical sectors, profound product knowledge and precise consulting are essential to building customer trust. Therefore, our team is constantly updating our technical expertise, sharpening our skills, and enhancing service quality on a daily basis.</p>
+                <p class="text-lg text-gray-700 mb-6 leading-relaxed" data-i18n="about_desc3">With responsibility, flexibility, and professionalism, VN TechSales aims to be your reliable strategic partner — optimizing resources, creating more business opportunities, and delivering long-term value in the Vietnamese market.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section (vẫn giữ nguyên nội dung nhưng không có liên kết menu) -->
+    <section id="why" class="py-20 bg-gray-50">
+        
+        <!-- Tiêu đề section (giữ giới hạn chiều rộng) -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 section-fade">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4" data-i18n="why_title">Sector Focus</h2>
+                <p class="text-lg text-gray-600" data-i18n="why_subtitle">Proven differentiation for scaling B2B sales teams</p>
+            </div>
+        </div>
+    
+        <!-- Grid full width trên màn hình lớn -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 xl:px-10">
+            
+            <!-- Benefit Card 1 -->
+            <div class="bg-white rounded-2xl overflow-hidden card-hover section-fade relative h-[380px] lg:h-[420px]">
+                <!-- Background Image -->
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-105" 
+                     style="background-image: url('maymocthietbi.jpg');">
+                </div>
+                
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70"></div>
+                
+                <!-- Nội dung -->
+                <div class="absolute bottom-0 left-0 right-0 p-8 relative z-20">
+                    <h3 class="text-lg font-bold text-white mb-3 text-center" data-i18n="benefit1_title">Automation solutions</h3>
+                    <p class="text-blue-100 text-sm text-center" data-i18n="benefit1_desc">
+                        .
+                    </p>
+                </div>
+            </div>
+    
+            <!-- Benefit Card 2 -->
+            <div class="bg-white rounded-2xl overflow-hidden card-hover section-fade relative h-[380px] lg:h-[420px]">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-105" 
+                     style="background-image: url('chetaomay.jpg');">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70"></div>
+                
+                <div class="absolute bottom-0 left-0 right-0 p-8 relative z-20">
+                    <h3 class="text-lg font-bold text-white mb-3 text-center" data-i18n="benefit2_title">Mechanical engineering</h3>
+                    <p class="text-blue-100 text-sm text-center" data-i18n="benefit2_desc">
+                        .
+                    </p>
+                </div>
+            </div>
+    
+            <!-- Benefit Card 3 -->
+            <div class="bg-white rounded-2xl overflow-hidden card-hover section-fade relative h-[380px] lg:h-[420px]">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-105" 
+                     style="background-image: url('duongong.JPG');">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70"></div>
+                
+                <div class="absolute bottom-0 left-0 right-0 p-8 relative z-20">
+                    <h3 class="text-lg font-bold text-white mb-3 text-center" data-i18n="benefit3_title">Piping systems</h3>
+                    <p class="text-blue-100 text-sm text-center" data-i18n="benefit3_desc">
+                        .
+                    </p>
+                </div>
+            </div>
+    
+            <!-- Benefit Card 4 -->
+            <div class="bg-white rounded-2xl overflow-hidden card-hover section-fade relative h-[380px] lg:h-[420px]">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-105" 
+                     style="background-image: url('thietbidoluong.jpg');">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70"></div>
+                
+                <div class="absolute bottom-0 left-0 right-0 p-8 relative z-20">
+                    <h3 class="text-lg font-bold text-white mb-3 text-center" data-i18n="benefit4_title">Measurement devices</h3>
+                    <p class="text-blue-100 text-sm text-center" data-i18n="benefit4_desc">
+                        .
+                    </p>
+                </div>
+            </div>
+    
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="section-fade">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6" data-i18n="contact_title">Get in Touch</h2>
+                    <p class="text-lg text-gray-600 mb-8" data-i18n="contact_subtitle">We'll respond within 24 hours
+                        with a tailored proposal.</p>
+
+                    <form id="contactForm" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_name">Full
+                                Name</label>
+                            <input type="text" id="formName" placeholder=""
+                                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_email">Email
+                                Address</label>
+                            <input type="email" id="formEmail" placeholder=""
+                                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2"
+                                data-i18n="form_message">Message</label>
+                            <textarea id="formMessage" rows="5" placeholder=""
+                                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none"
+                                required></textarea>
+                        </div>
+                        <button type="submit"
+                            class="cta-primary text-white w-full px-6 py-3 rounded-lg font-bold text-lg"
+                            data-i18n="form_submit">Send Message</button>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="successMessage" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p class="text-green-700 font-medium" data-i18n="form_success">Thank you! We will contact you
+                            soon.</p>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="section-fade" style="animation-delay: 0.2s;">
+                    <div class="bg-gray-50 rounded-xl p-8 mb-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6" data-i18n="contact_info_title">Contact
+                            Information</h3>
+
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div
+                                    class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-envelope text-blue-600 text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600" data-i18n="contact_email_label">Email</p>
+                                    <p class="text-gray-900 font-medium">allan@vntechsales.com</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div
+                                    class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-phone text-blue-600 text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600" data-i18n="contact_phone_label">Phone</p>
+                                    <p class="text-gray-900 font-medium">+84 867051007</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div
+                                    class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-map-marker-alt text-blue-600 text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600" data-i18n="contact_location_label">Address</p>
+                                    <p class="text-gray-900 font-medium"> 72 Nguyễn Thị Nhung, KDT Vạn Phúc, Hiệp Bình, Hồ Chí Minh, Việt Nam</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Google Map -->
+                    <div class="rounded-xl overflow-hidden shadow-lg h-64">
+                        <iframe src="https://www.google.com/maps?q=10.844123,106.711808&hl=en&z=15&output=embed"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">GB</span>
+                        </div>
+                        <span class="text-lg font-bold" data-i18n="footer_company">VN TechSales</span>
+                    </div>
+                    <p class="text-gray-400 text-sm" data-i18n="footer_desc">Connecting global companies with expert
+                        sales engineers.</p>
+                </div>
+
+                <!-- Quick Links (giữ nguyên Home để link đến phần hero, không ảnh hưởng menubar) -->
+                <div>
+                    <h4 class="font-bold text-white mb-4" data-i18n="footer_links">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition"
+                                data-i18n="nav_home">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition"
+                                data-i18n="nav_about">About</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition"
+                                data-i18n="nav_services">Services</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h4 class="font-bold text-white mb-4" data-i18n="footer_services">Services</h4>
+                    <ul class="space-y-2">
+                        <li><span class="text-gray-400 text-sm" data-i18n="service1_title">Technical Sales
+                                Support</span></li>
+                        <li><span class="text-gray-400 text-sm" data-i18n="service2_title">Outsourced Technical Sales
+                                Representation</span>
+                        </li>
+                        <li><span class="text-gray-400 text-sm" data-i18n="service3_title">Market Entry
+                                Assistance</span></li>
+                    </ul>
+                </div>
+
+                <!-- Social -->
+                <div>
+                    <h4 class="font-bold text-white mb-4" data-i18n="footer_follow">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition">
+                            <i class="fab fa-linkedin text-white"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition">
+                            <i class="fab fa-youtube text-white"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition">
+                            <i class="fab fa-tiktok text-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8">
+                <p class="text-gray-400 text-sm text-center" data-i18n="footer_copyright">© 2024 VN TechSales. All
+                    rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Internationalization (i18n) Object – Đã thay toàn bộ "Techsales VN" thành "VN TechSales"
+        const translations = {
+            en: {
+                logo: "VN TechSales",
+                nav_home: "Home",
+                nav_about: "About",
+                nav_services: "Services",
+                nav_why: "Why Us",
+                nav_contact: "Contact",
+                cta_consultation: "Get a Free Consultation",
+                hero_headline: "Skip payroll. Let our sales engineers be your",
+                hero_subheadline: "We provide local sales representation services led by carefully selected, highly qualified engineers with extensive expertise in industrial automation equipment and solutions, helping your company effectively execute business transactions and expand its operations throughout the Vietnamese market.",
+                services_title: "Our Services",
+                services_subtitle: "Comprehensive solutions to accelerate your sales",
+                service1_title: "Strategic Analysis",
+                service1_desc: "We provide deep insights into the Vietnamese industrial landscape.Our service goes beyond raw data; we identify high-potential segments , analyze competitor pricing strategies, and navigate local regulatory requirements. We ensure your market entry is backed by actionable intelligence to minimize risks and maximize ROI.",
+                service2_title: "Outsourced Technical Sales Representation",
+                service2_desc: "Acting as your local sales arm, we combine engineering expertise with local market fluency. Our team doesn't just sell products; we provide technical consultations, conduct product presentations for EPC contractors, and manage the entire sales cycle from lead generation to contract negotiation. We bridge the gap between your factory’s capabilities and the specific technical demands of Vietnamese engineers.",
+                service3_title: "Authorized After-Sales & Field Services",
+                service3_desc: "We eliminate the geographical barrier by acting as your authorized service center in Vietnam. Our technicians provide on-site installation supervision, troubleshooting, and routine maintenance. By offering localized technical support and warranty handling, we build long-term trust with your customers, ensuring your brand is synonymous with reliability and excellent service.",
+                service4_title: "Local Logistics & Inventory Management",
+                service4_desc: "To optimize delivery times and reduce shipping costs, we offer localized fulfillment solutions. We assist in managing bonded warehouse operations, tracking inventory levels, and streamlining the import-export process. This ensures that your products are always project-ready for Vietnamese customers, providing a significant competitive advantage over overseas competitors.",
+                service5_title: "Market Expansion & Office Setup Consultancy",
+                service5_desc: "We serve as your strategic consultant for long-term growth. From scouting the ideal location for your representative office to navigating Vietnamese labor laws and recruiting local talent, we pave the way for your physical presence. Our goal is to ensure a seamless transition from an outsourced model to your own fully operational branch in Vietnam.",
+                about_title: "About VN TechSales",
+                about_desc1: "VN TechSales is dedicated to providing effective technical sales solutions that help businesses successfully expand and grow sustainably in Vietnam.",
+                about_desc2: "We understand that in the industrial and technical sectors, profound product knowledge and precise consulting are essential to building customer trust. Therefore, our team is constantly updating our technical expertise, sharpening our skills, and enhancing service quality on a daily basis.",
+                about_desc3: "With responsibility, flexibility, and professionalism, VN TechSales aims to be your reliable strategic partner — optimizing resources, creating more business opportunities, and delivering long-term value in the Vietnamese market.",
+                why_title: "Sector focus",
+                why_subtitle: "Where Engineering Meets Sales",
+                benefit1_title: "Automation solutions",
+                benefit1_desc: " ",
+                benefit2_title: "Mechanical engineering",
+                benefit2_desc: " ",
+                benefit3_title: " Piping systems",
+                benefit3_desc: " ",
+                benefit4_title: "Measurement devices",
+                benefit4_desc: " ",
+                contact_title: "Get in Touch",
+                contact_subtitle: "We'll respond within 24 hours with a tailored proposal.",
+                form_name: "Full Name",
+                form_email: "Email Address",
+                form_message: "Message",
+                form_submit: "Send Message",
+                form_success: "Thank you! We will contact you soon.",
+                contact_info_title: "Contact Information",
+                contact_email_label: "Email",
+                contact_phone_label: "Phone",
+                contact_location_label: "Address",
+                map_placeholder: "Map - Global Presence",
+                footer_company: "VN TechSales",
+                footer_desc: "NHAT TAM GB COMPANY LIMITED",
+                footer_links: "Quick Links",
+                footer_services: "Services",
+                footer_follow: "Follow Us",
+                footer_copyright: "© 2026 VN TechSales. All rights reserved."
+            },
+            zh: {
+                logo: "VN TechSales",
+                nav_home: "首页",
+                nav_about: "关于我们",
+                nav_services: "服务",
+                nav_why: "为什么选择我们",
+                nav_contact: "联系",
+                cta_consultation: "免费咨询",
+                hero_headline: "省去工资单的麻烦！让我们的销售工程师成为您的得力干将",
+                hero_subheadline: "我们提供本地销售代理服务，由经过精心选拔、具备工业自动化设备及解决方案领域深厚专业功底的高素质工程师主导，帮助贵公司高效执行商业交易并在越南市场全面拓展业务。",
+                services_title: "我们的服务",
+                services_subtitle: "全面的解决方案，加速您的销售",
+                service1_title: "战略分析",
+                service1_desc: "我们提供对越南工业格局的深刻洞察。我们的服务不仅限于原始数据；我们还会识别高潜力细分领域，分析竞争对手的定价策略，并解读当地的法规要求。我们确保您的市场进入有可执行的智能分析作为支撑，从而将风险降到最低，并最大化投资回报率",
+                service2_title: "外包技术销售代表服务",
+                service2_desc: "作为您在当地的销售力量，我们将工程专业知识与对本地市场的深刻理解相结合。我们的团队不仅仅是销售产品，更提供技术咨询、为EPC总包商进行产品演示，并管理从线索挖掘到合同谈判的整个销售周期。我们帮助弥合贵公司工厂的技术能力与越南工程师具体技术要求之间的差距",
+                service3_title: "授权售后及现场服务",
+                service3_desc: "我们作为您在越南的授权服务中心，消除地理障碍。我们的技术人员提供现场安装指导、故障排除和日常维护。通过提供本地化的技术支持和保修服务，我们与您的客户建立长期信任，确保您的品牌成为可靠与卓越服务的代名词。",
+                service4_title: "本地物流与库存管理",
+                service4_desc: "为优化交货时间并降低运输成本，我们提供本地化履行解决方案。我们协助管理保税仓库运营、跟踪库存水平并简化进出口流程。这确保您的产品对越南客户来说始终处于“项目就绪”状态，相比海外竞争对手具有显著的竞争优势。",
+                service5_title: "市场拓展与办公室设立咨询",
+                service5_desc: "我们作为您的战略顾问，助力长期发展。从为您物色代表处的理想选址，到解读越南劳动法及招聘本地人才，我们为您在当地的实际落地铺平道路。我们的目标是确保您从外包模式顺利过渡到在越南拥有自己完全运营的分支机构。",
+                about_title: "关于VN TechSales",
+                about_desc1: "VN TechSales 致力于提供高效的技术销售解决方案，帮助企业在越南市场成功拓展并实现可持续增长。",
+                about_desc2: "我们深知，在工业及技术领域，深厚的产品知识与精准的咨询是建立客户信任的关键。因此，我们的团队不断更新专业技术，精进业务能力，持续提升服务质量。",
+                about_desc3: "秉持责任心、灵活性与专业精神，VN TechSales 旨在成为您可靠的战略合作伙伴——优化资源，创造更多商机，在越南市场为您带来长期价值。",                
+                why_title: "行业聚焦",
+                why_subtitle: "工程与销售的完美结合",
+                benefit1_title: "自动化解决方案",
+                benefit1_desc: " ",
+                benefit2_title: "机械工程",
+                benefit2_desc: " ",
+                benefit3_title: " 管道系统",
+                benefit3_desc: " ",
+                benefit4_title: "测量设备",
+                benefit4_desc: " ",
+                contact_title: "联系我们",
+                contact_subtitle: "我们将在24小时内回复您的定制提案。",
+                form_name: "全名",
+                form_email: "电子邮件地址",
+                form_message: "消息",
+                form_submit: "发送消息",
+                form_success: "谢谢！我们会尽快联系您。",
+                contact_info_title: "联系信息",
+                contact_email_label: "邮箱",
+                contact_phone_label: "电话",
+                contact_location_label: "地址",
+                map_placeholder: "地图 - 全球业务",
+                footer_company: "VN TechSales",
+                footer_desc: "NHAT TAM GB COMPANY LIMITED",
+                footer_links: "快速链接",
+                footer_services: "服务",
+                footer_follow: "关注我们",
+                footer_copyright: "© 2024 VN TechSales。版权所有。"
+            }
+        };
+
+        // Current Language State
+        let currentLang = localStorage.getItem("selectedLanguage") || "en";
+
+        // Initialize Language on Page Load
+        document.addEventListener("DOMContentLoaded", () => {
+            applyLanguage(currentLang);
+            updateLanguageToggleUI();
+            setupScrollAnimations();
+            setupMobileMenu();
+            setupContactForm();
+        });
+
+        // Apply Language Function
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem("selectedLanguage", lang);
+
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll("[data-i18n]").forEach(element => {
+                const key = element.getAttribute("data-i18n");
+                const translatedText = translations[lang][key];
+
+                // Handle different element types
+                if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                    element.placeholder = translatedText;
+                } else {
+                    element.textContent = translatedText;
+                }
+            });
+
+            // Update document language attribute
+            document.documentElement.lang = lang;
+
+            // Update toggle UI
+            updateLanguageToggleUI();
+        }
+
+        // Update Language Toggle UI
+        function updateLanguageToggleUI() {
+            const toggleBtns = document.querySelectorAll(".toggle-btn");
+            toggleBtns.forEach(btn => {
+                btn.classList.remove("active");
+                if (btn.getAttribute("data-lang") === currentLang) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+
+        // Language Toggle Event Listener
+        document.getElementById("languageToggle").addEventListener("click", (e) => {
+            const btn = e.target.closest(".toggle-btn");
+            if (btn) {
+                const lang = btn.getAttribute("data-lang");
+                applyLanguage(lang);
+            }
+        });
+
+        // Scroll Animations
+        function setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll(".section-fade").forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+            const mobileMenu = document.getElementById("mobileMenu");
+
+            mobileMenuBtn.addEventListener("click", () => {
+                mobileMenu.classList.toggle("hidden");
+            });
+
+            // Close menu when link is clicked
+            document.querySelectorAll("#mobileMenu a").forEach(link => {
+                link.addEventListener("click", () => {
+                    mobileMenu.classList.add("hidden");
+                });
+            });
+        }
+
+        // Contact Form Submission
+        function setupContactForm() {
+            const contactForm = document.getElementById("contactForm");
+            const successMessage = document.getElementById("successMessage");
+
+            contactForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                // Get form values
+                const name = document.getElementById("formName").value;
+                const email = document.getElementById("formEmail").value;
+                const message = document.getElementById("formMessage").value;
+
+                // Simulate form submission
+                console.log("Form submitted:", { name, email, message });
+
+                // Show success message
+                contactForm.classList.add("hidden");
+                successMessage.classList.remove("hidden");
+
+                // Reset form
+                contactForm.reset();
+
+                // Hide success message after 5 seconds and reset form
+                setTimeout(() => {
+                    successMessage.classList.add("hidden");
+                    contactForm.classList.remove("hidden");
+                }, 5000);
+            });
+        }
+    </script>
+
+</body>
+
+</html>
